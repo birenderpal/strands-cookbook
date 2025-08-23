@@ -35,3 +35,4 @@ with stdio_mcp_client:
     # Create an agent with these tools
     agent = Agent(tools=tools,model=bedrock_model)
     agent("List all tables in telecom_data namespace?")
+
