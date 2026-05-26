@@ -1,0 +1,19 @@
+# Container image for serving the FastAPI example (fastapi_server.py).
+# Copy to `Dockerfile` (no extension) to build:
+#
+#   docker build -t strands-cookbook .
+#   docker run -p 8000:8000 -e AWS_PROFILE=default -v ~/.aws:/root/.aws strands-cookbook
+
+FROM python:3.13-slim
+
+WORKDIR /app
+
+# uv for fast dependency installs from the cookbook's pyproject.toml
+RUN pip install --no-cache-dir uv
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-dev
+
+COPY 12_deployment/fastapi_server.py ./fastapi_server.py
+
+EXPOSE 8000
+CMD ["uv", "run", "uvicorn", "fastapi_server:app", "--host", "0.0.0.0", "--port", "8000"]
